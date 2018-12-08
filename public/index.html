@@ -19,17 +19,64 @@
     <div class="row">
       <div class="col-md-6">
         <form>
-          <label for="URL-input">Website: </label>
-          <input type="text" id="URL-input">
+          <label for="url-input">Website: </label>
+          <input type="text" id="url-input">
+          <input type="submit" id="sub-btn">
         </form>
       </div>
       <div class="col-md-6">
+        <h4>About</h4>
         <ul>
-          <li>Website - Shortened URL</li>
+          <li>This is the third project for earning an API certificate from freeCodeCamp</li>
+          <li>Submitting a valid URL will return a JSON response with a "short url" (a number)</li>
+          <li>Visiting the relative path "/api/shorturl/yourNumberHere" will redirect you to that web page</li>
         </ul>
       </div>
     </div>
+    <div class="row">
+      
+      <div class="col-md-6">
+        <h4>Shortened URLs:</h4>
+        <ul id="url-list">
+          
+        </ul>
+      </div>
+      <div class="col-md-6">
+
+      </div>
+    </div>
   </div>
+  <script>
+    // "/api/shorturl/new"
+    const postNewUrl = (newUrl) => {
+      fetch("/api/shorturl/new", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        body: JSON.stringify({url: newUrl})
+      }).then(res => res.json()).then(json => {
+        displayNewUrl(json.original_url, json.short_url);
+      }).catch(err => {
+        console.log(err);
+      });
+    }
+
+    const displayNewUrl = (original, short) => {
+      // <a href="api/shorturl/short">api/shorturl/short</a> - original 
+      let newItem = document.createElement("li");
+      newItem.innerHTML = `<a target="_blank" href="api/shorturl/${short}">api/shorturl/${short}</a> - ${original}`;
+      document.querySelector("#url-list").appendChild(newItem);
+
+    }
+
+    document.querySelector("#sub-btn").addEventListener("click", (e) => {
+      e.preventDefault();
+      let newUrl = document.querySelector("#url-input").value;
+      postNewUrl(newUrl);
+    })
+
+  </script>
 
 </body>
 
